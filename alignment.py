@@ -59,5 +59,19 @@ for i in range(0, math.ceil(min(len(seq1), len(seq2))/2)):
 ans = compare(num1, num2)
 if ans > 0:
     print("Move sequence " + str(ans) + " spaces to the right")
+    if len(seq1) < len(seq2):
+        for i in range(0,ans):
+            seq1= "_"+seq1
+    else:
+        for i in range(0,ans):
+            seq2="_"+seq2
 elif ans < 0:
     print("Move sequence " + abs(ans) + " spaces to the left")
+    if len(seq1) < len(seq2):
+        for i in range(0,ans):
+            seq1= seq1+"_"
+    else:
+        for i in range(0,ans):
+            seq2= seq2 + "_"
+print (seq1)
+print (seq2)
