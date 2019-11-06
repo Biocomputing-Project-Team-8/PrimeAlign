@@ -1,5 +1,6 @@
 import math
 
+
 def convert(seq, num):
     for a in seq:
         if a == 'A':
@@ -10,14 +11,13 @@ def convert(seq, num):
             num.append(5)
         elif a == 'T':
             num.append(7)
-        elif a == '_':
-            num.append(1)
         else:
             return -1
     return num
 
+
 def compress(num):
-    for i in range(0,len(num)-1):
+    for i in range(0, len(num)-1):
         num[i] = num[i] * num[i+1]
     return num[0:len(num)-1]
 
@@ -37,35 +37,32 @@ def compare(a, b):
             diff.append(temp - i)
         else:
             diff.append('x')
-    for j in diff:
-        if j != 'x':
-            return j
-    return 'x'
+    print(diff)
+    if diff[2] == 'x':
+        return diff
+    else:
+        return 'x'
 
 
-seq1 = "AGTCCT"
-seq2 = "TAGTCGA"
+seq1 = "AATCTATA"
+seq2 = "AAGATA"
 num1 = []
 num2 = []
 num1 = convert(seq1, num1)
 num2 = convert(seq2, num2)
-print(num1, num2)
-t1 = num1
-t2 = num2
-while compare(t1, t2) != 'x':
-    t1 = compress(t1)
-    t2 = compress(t2)
+c = 0
 
-    if compare(t1,t2) != 'x':
-        print(t1, t2)
-        num1 = t1
-        num2 = t2
-    else:
-        break
-
+while compare(num1, num2) == 'x':
+    num1 = compress(num1)
+    num2 = compress(num2)
+    c += 1
+    print(num1, num2, c)
 ans = compare(num1, num2)
-print (ans)
-
+for i in range(0, len(ans)):
+    if ans[i] == 'x':
+        seq2 = seq2[:i] + '_' + seq2[i:]
+print(ans)
+"""
 if ans > 0:
     print("Move sequence " + str(ans) + " spaces to the right")
     if len(seq1) < len(seq2):
@@ -82,6 +79,6 @@ elif ans < 0:
     else:
         for i in range(0,ans):
             seq2= seq2 + "_"
-
+"""
 print (seq1)
 print (seq2)
