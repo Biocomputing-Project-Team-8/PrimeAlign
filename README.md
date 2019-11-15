@@ -1,1 +1,1 @@
-# Biocomputing-project
+# PrimeAlign
