@@ -1,3 +1,6 @@
+import math
+
+
 class Node:
     positive = True
     A = 0
@@ -6,8 +9,8 @@ class Node:
     T = 0
 
     def __lt__(self, other):
-        return 2 ** self.A * 3 ** self.C * 5 ** self.G * 7 ** self.T < 2 ** other.A * 3 ** other.C * 5 ** other.G * \
-               7 ** other.T
+        return self.A * math.log(2) + self.C * math.log(3) + self.G * math.log(5) + self.T * math.log(
+            7) < other.A * math.log(2) + other.C * math.log(3) + other.G * math.log(5) + other.T * math.log(7)
 
     def __add__(self, other):
         node = Node()
@@ -128,8 +131,10 @@ class Sequence:
         return aligned_sequence_self, aligned_sequence_other
 
 
-sequence1 = Sequence("ATACGGCGGACGTTG")
-sequence2 = Sequence("AATTACGGCCCACGGATT")
+sequence1 = Sequence(
+    "TCTGTAGACCAACAGAACTGTCACAGCTTTATTTTGTGACTCATTATATTACAACATAGAAATATGCATTTTAATACTTCATATAAAGTTATTGACATACAAAATTTTTTTTC")
+sequence2 = Sequence(
+    "TGTGTAGACCAGCAGGACTGTCACAGCTTTATTTTGTGACTCATAACATAGAAACAAGCTTTTAAAAAAACACGTCATATAAAGTTATTCACAATACAATTTTTTTCAGTT")
 alignment = sequence1.global_alignment(sequence2)
 print(alignment[0])
 print(alignment[1])
