@@ -61,12 +61,12 @@ class Sequence:
             self.graph.insert(0, k_mers)
 
     def global_alignment(self, other):
+        graph_self = self.graph
+        graph_other = other.graph
         if self.length > other.length:
             graph_self = self.graph[self.length - other.length:self.length]
-            graph_other = other.graph
         elif other.length > self.length:
             graph_other = other.graph[other.length - self.length:other.length]
-            graph_self = self.graph
         matches_self = []
         matches_other = []
         for i in range(0, len(graph_self)):
