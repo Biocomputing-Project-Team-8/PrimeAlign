@@ -1,3 +1,4 @@
+import pathlib
 import decimal
 
 log2 = decimal.getcontext().log10(2)
@@ -137,20 +138,30 @@ class Sequence:
         return aligned_sequence_self, aligned_sequence_other
 
 
-file_path = input("Enter the path to the FASTA file: ")
-file = open(file_path, "r")
+input_file_path = input("Enter the path to the FASTA file: ")
+input_file = open(input_file_path, "r")
 sequences = []
-for line in file:
+for line in input_file:
     if line[0] == ">":
+        sequences.append(line)
         sequences.append("")
         continue
     for character in line:
         if character == "A" or character == "C" or character == "G" or character == "T":
             sequences[len(sequences) - 1] += character
-file.close()
+input_file.close()
 
-sequence1 = Sequence(sequences[0])
-sequence2 = Sequence(sequences[1])
+sequence1 = Sequence(sequences[1])
+sequence2 = Sequence(sequences[3])
 alignment = sequence1.global_alignment(sequence2)
-print(alignment[0])
-print(alignment[1])
+
+output_file_path = pathlib.Path(input_file_path).stem + "_alignment" + pathlib.Path(input_file_path).suffix
+output_file = open(output_file_path, "w+")
+output_file.write(sequences[0])
+for i in range(0, int(len(alignment[0]) / 60) + 1):
+    output_file.write(alignment[0][i * 60:i * 60 + 60] + "\n")
+output_file.write(sequences[2])
+for i in range(0, int(len(alignment[1]) / 60) + 1):
+    output_file.write(alignment[1][i * 60:i * 60 + 60] + "\n")
+output_file.close()
+print("Exported alignment to: " + output_file_path)
