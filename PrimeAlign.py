@@ -139,41 +139,41 @@ class Sequence:
         return aligned_sequence_self, aligned_sequence_other
 
 
-def read_file():
-    input_file_path = input("Enter the path to the FASTA file: ")
-    input_file = open(input_file_path, "r")
-    sequences = []
-    for line in input_file:
-        if line[0] == ">":
-            sequences.append(line[1:])
-            sequences.append("")
-            continue
-        for character in line:
-            if character == "A" or character == "C" or character == "G" or character == "T":
-                sequences[len(sequences) - 1] += character
-    input_file.close()
-    sequence1 = Sequence(sequences[1], sequences[0])
-    sequence2 = Sequence(sequences[3], sequences[2])
-    return input_file_path, sequence1, sequence2
+class FastaFile:
+    file_path = sequences = None
+
+    def __init__(self):
+        self.file_path = input("Enter the path to the FASTA file: ")
+        input_file = open(self.file_path, "r")
+        input_sequences = []
+        for line in input_file:
+            if line[0] == ">":
+                input_sequences.append(line[1:])
+                input_sequences.append("")
+                continue
+            for character in line:
+                if character == "A" or character == "C" or character == "G" or character == "T":
+                    input_sequences[len(input_sequences) - 1] += character
+        input_file.close()
+        self.sequences = []
+        for i in range(0, int(len(input_sequences) / 2)):
+            self.sequences.append(Sequence(input_sequences[i * 2 + 1], input_sequences[i * 2]))
+
+    @staticmethod
+    def export_file(file_path, sequences, descriptions):
+        output_file_path = str(pathlib.Path(file_path).parent) + "/" + pathlib.Path(
+            file_path).stem + "_alignment" + pathlib.Path(file_path).suffix
+        output_file = open(output_file_path, "w+")
+        for i in range(0, len(sequences)):
+            output_file.write(">" + descriptions[i])
+            for j in range(0, int(len(sequences[i]) / 60) + 1):
+                output_file.write(sequences[i][j * 60:j * 60 + 60] + "\n")
+        output_file.close()
+        print("Exported alignment to: " + pathlib.Path(output_file_path).stem + pathlib.Path(output_file_path).suffix)
 
 
-def export_file(input_file_path, sequence1, sequence2, alignment):
-    output_file_path = str(pathlib.Path(input_file_path).parent) + "/" + pathlib.Path(
-        input_file_path).stem + "_alignment" + pathlib.Path(input_file_path).suffix
-    output_file = open(output_file_path, "w+")
-    output_file.write(">" + sequence1.description)
-    for i in range(0, int(len(alignment[0]) / 60) + 1):
-        output_file.write(alignment[0][i * 60:i * 60 + 60] + "\n")
-    output_file.write(">" + sequence2.description)
-    for i in range(0, int(len(alignment[1]) / 60) + 1):
-        output_file.write(alignment[1][i * 60:i * 60 + 60] + "\n")
-    output_file.close()
-    print("Exported alignment to: " + pathlib.Path(output_file_path).stem + pathlib.Path(output_file_path).suffix)
-
-
-input_file = read_file()
-input_file_path = input_file[0]
-sequence1 = input_file[1]
-sequence2 = input_file[2]
+fasta = FastaFile()
+sequence1 = fasta.sequences[0]
+sequence2 = fasta.sequences[1]
 alignment = sequence1.global_alignment(sequence2)
-export_file(input_file_path, sequence1, sequence2, alignment)
+FastaFile.export_file(fasta.file_path, alignment, [sequence1.description, sequence2.description])
