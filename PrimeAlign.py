@@ -137,10 +137,20 @@ class Sequence:
         return aligned_sequence_self, aligned_sequence_other
 
 
-sequence1 = Sequence(
-    "TCTGTAGACCAACAGAACTGTCACAGCTTTATTTTGTGACTCATTATATTACAACATAGAAATATGCATTTTAATACTTCATATAAAGTTATTGACATACAAAATTTTTTTTC")
-sequence2 = Sequence(
-    "TGTGTAGACCAGCAGGACTGTCACAGCTTTATTTTGTGACTCATAACATAGAAACAAGCTTTTAAAAAAACACGTCATATAAAGTTATTCACAATACAATTTTTTTCAGTT")
+file_path = input("Enter the path to the FASTA file: ")
+file = open(file_path, "r")
+sequences = []
+for line in file:
+    if line[0] == ">":
+        sequences.append("")
+        continue
+    for character in line:
+        if character == "A" or character == "C" or character == "G" or character == "T":
+            sequences[len(sequences) - 1] += character
+file.close()
+
+sequence1 = Sequence(sequences[0])
+sequence2 = Sequence(sequences[1])
 alignment = sequence1.global_alignment(sequence2)
 print(alignment[0])
 print(alignment[1])
