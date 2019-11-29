@@ -1,5 +1,5 @@
 import decimal
-import pathlib
+import sys
 
 log2 = decimal.getcontext().log10(2)
 log3 = decimal.getcontext().log10(3)
@@ -139,8 +139,8 @@ class Sequence:
 class FastaFile:
     file_path = sequences = None
 
-    def __init__(self):
-        self.file_path = input("Enter the path to the FASTA file: ")
+    def __init__(self, input_file_path):
+        self.file_path = input_file_path
         input_file = open(self.file_path, "r")
         input_sequences = []
         for line in input_file:
@@ -157,9 +157,7 @@ class FastaFile:
             self.sequences.append(Sequence(input_sequences[i * 2 + 1], input_sequences[i * 2]))
 
     @staticmethod
-    def export_file(file_path, sequences, descriptions, characters_per_line):
-        output_file_path = str(pathlib.Path(file_path).parent) + "/" + pathlib.Path(
-            file_path).stem + "_alignment" + pathlib.Path(file_path).suffix
+    def export_file(output_file_path, sequences, descriptions, characters_per_line):
         output_file = open(output_file_path, "w+")
         for i in range(0, len(sequences)):
             output_file.write(">" + descriptions[i])
@@ -167,11 +165,10 @@ class FastaFile:
                 output_file.write(
                     sequences[i][j * characters_per_line:j * characters_per_line + characters_per_line] + "\n")
         output_file.close()
-        print("Exported alignment to: " + pathlib.Path(output_file_path).stem + pathlib.Path(output_file_path).suffix)
 
 
-fasta = FastaFile()
+fasta = FastaFile(sys.argv[1])
 sequence1 = fasta.sequences[0]
 sequence2 = fasta.sequences[1]
 alignment = sequence1.global_alignment(sequence2)
-FastaFile.export_file(fasta.file_path, alignment, [sequence1.description, sequence2.description], 60)
+FastaFile.export_file(sys.argv[2], alignment, [sequence1.description, sequence2.description], 60)
