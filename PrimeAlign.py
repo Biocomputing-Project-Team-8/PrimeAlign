@@ -33,10 +33,7 @@ class Node:
 
 
 class Sequence:
-    sequence = None
-    description = None
-    length = None
-    graph = None
+    sequence = description = length = graph = None
 
     def __init__(self, sequence, description):
         self.sequence = sequence
