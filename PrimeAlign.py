@@ -1,16 +1,20 @@
-import math
+import decimal
+
+log2 = decimal.getcontext().log10(2)
+log3 = decimal.getcontext().log10(3)
+log5 = decimal.getcontext().log10(5)
+log7 = decimal.getcontext().log10(7)
 
 
 class Node:
     positive = True
-    A = 0
-    C = 0
-    G = 0
-    T = 0
+    A = decimal.Decimal(0)
+    C = decimal.Decimal(0)
+    G = decimal.Decimal(0)
+    T = decimal.Decimal(0)
 
     def __lt__(self, other):
-        return self.A * math.log(2) + self.C * math.log(3) + self.G * math.log(5) + self.T * math.log(
-            7) < other.A * math.log(2) + other.C * math.log(3) + other.G * math.log(5) + other.T * math.log(7)
+        return self.A + self.C + self.G + self.T < other.A + other.C + other.G + other.T
 
     def __add__(self, other):
         node = Node()
@@ -40,13 +44,13 @@ class Sequence:
         for nucleotide in sequence:
             node = Node()
             if nucleotide == 'A':
-                node.A = 1
+                node.A = log2
             elif nucleotide == 'C':
-                node.C = 1
+                node.C = log3
             elif nucleotide == 'G':
-                node.G = 1
+                node.G = log5
             elif nucleotide == 'T':
-                node.T = 1
+                node.T = log7
             one_mers.append(node)
         self.graph = []
         self.graph.insert(0, one_mers)
