@@ -34,12 +34,13 @@ class Node:
 
 class Sequence:
     sequence = None
-    name = None
+    description = None
     length = None
     graph = None
 
-    def __init__(self, sequence):
+    def __init__(self, sequence, description):
         self.sequence = sequence
+        self.description = description
         self.length = len(sequence)
         monomers = []
         for nucleotide in sequence:
