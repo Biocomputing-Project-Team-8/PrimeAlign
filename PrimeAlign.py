@@ -62,12 +62,14 @@ class Sequence:
 
     def global_alignment(self, other):
         if self.length > other.length:
-            self.graph = self.graph[self.length - other.length:self.length]
+            graph_self = self.graph[self.length - other.length:self.length]
+            graph_other = other.graph
         elif other.length > self.length:
-            other.graph = other.graph[other.length - self.length:other.length]
+            graph_other = other.graph[other.length - self.length:other.length]
+            graph_self = self.graph
         matches_self = []
         matches_other = []
-        for i in range(0, len(self.graph)):
+        for i in range(0, len(graph_self)):
             range_matches = []
             range_k = []
             for j in range(0, len(matches_self)):
@@ -76,7 +78,7 @@ class Sequence:
             for j in range(0, len(range_matches)):
                 range_k.append([start, range_matches[j][0]])
                 start = range_matches[j][1]
-            range_k.append([start, len(self.graph[i])])
+            range_k.append([start, len(graph_self[i])])
             range_matches = []
             range_m = []
             for j in range(0, len(matches_other)):
@@ -85,12 +87,12 @@ class Sequence:
             for j in range(0, len(range_matches)):
                 range_m.append([start, range_matches[j][0]])
                 start = range_matches[j][1]
-            range_m.append([start, len(other.graph[i])])
+            range_m.append([start, len(graph_other[i])])
             for j in range(0, len(range_k)):
                 offset = range_m[j][0]
                 for k in range(range_k[j][0], range_k[j][1]):
                     for m in range(offset, range_m[j][1]):
-                        if self.graph[i][k] == other.graph[i][m]:
+                        if graph_self[i][k] == graph_other[i][m]:
                             matches_self.append([k, i])
                             matches_other.append([m, i])
                             offset = m + 1
