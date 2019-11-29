@@ -157,14 +157,15 @@ class FastaFile:
             self.sequences.append(Sequence(input_sequences[i * 2 + 1], input_sequences[i * 2]))
 
     @staticmethod
-    def export_file(file_path, sequences, descriptions):
+    def export_file(file_path, sequences, descriptions, characters_per_line):
         output_file_path = str(pathlib.Path(file_path).parent) + "/" + pathlib.Path(
             file_path).stem + "_alignment" + pathlib.Path(file_path).suffix
         output_file = open(output_file_path, "w+")
         for i in range(0, len(sequences)):
             output_file.write(">" + descriptions[i])
-            for j in range(0, int(len(sequences[i]) / 60) + 1):
-                output_file.write(sequences[i][j * 60:j * 60 + 60] + "\n")
+            for j in range(0, int(len(sequences[i]) / characters_per_line) + 1):
+                output_file.write(
+                    sequences[i][j * characters_per_line:j * characters_per_line + characters_per_line] + "\n")
         output_file.close()
         print("Exported alignment to: " + pathlib.Path(output_file_path).stem + pathlib.Path(output_file_path).suffix)
 
@@ -173,4 +174,4 @@ fasta = FastaFile()
 sequence1 = fasta.sequences[0]
 sequence2 = fasta.sequences[1]
 alignment = sequence1.global_alignment(sequence2)
-FastaFile.export_file(fasta.file_path, alignment, [sequence1.description, sequence2.description])
+FastaFile.export_file(fasta.file_path, alignment, [sequence1.description, sequence2.description], 60)
