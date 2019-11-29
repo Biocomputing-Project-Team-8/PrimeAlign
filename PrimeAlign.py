@@ -155,7 +155,8 @@ sequence1 = Sequence(sequences[1])
 sequence2 = Sequence(sequences[3])
 alignment = sequence1.global_alignment(sequence2)
 
-output_file_path = pathlib.Path(input_file_path).stem + "_alignment" + pathlib.Path(input_file_path).suffix
+output_file_path = str(pathlib.Path(input_file_path).parent) + "/" + pathlib.Path(
+    input_file_path).stem + "_alignment" + pathlib.Path(input_file_path).suffix
 output_file = open(output_file_path, "w+")
 output_file.write(sequences[0])
 for i in range(0, int(len(alignment[0]) / 60) + 1):
@@ -164,4 +165,4 @@ output_file.write(sequences[2])
 for i in range(0, int(len(alignment[1]) / 60) + 1):
     output_file.write(alignment[1][i * 60:i * 60 + 60] + "\n")
 output_file.close()
-print("Exported alignment to: " + output_file_path)
+print("Exported alignment to: " + pathlib.Path(output_file_path).stem + pathlib.Path(output_file_path).suffix)
