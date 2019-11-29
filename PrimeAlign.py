@@ -40,7 +40,7 @@ class Sequence:
     def __init__(self, sequence):
         self.sequence = sequence
         self.length = len(sequence)
-        one_mers = []
+        monomers = []
         for nucleotide in sequence:
             node = Node()
             if nucleotide == 'A':
@@ -51,9 +51,9 @@ class Sequence:
                 node.G = log5
             elif nucleotide == 'T':
                 node.T = log7
-            one_mers.append(node)
+            monomers.append(node)
         self.graph = []
-        self.graph.insert(0, one_mers)
+        self.graph.insert(0, monomers)
         for i in range(1, self.length):
             k_mers = []
             for j in range(0, self.length - i):
