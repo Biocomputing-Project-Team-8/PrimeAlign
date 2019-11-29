@@ -1,5 +1,5 @@
-import pathlib
 import decimal
+import pathlib
 
 log2 = decimal.getcontext().log10(2)
 log3 = decimal.getcontext().log10(3)
@@ -139,31 +139,41 @@ class Sequence:
         return aligned_sequence_self, aligned_sequence_other
 
 
-input_file_path = input("Enter the path to the FASTA file: ")
-input_file = open(input_file_path, "r")
-sequences = []
-for line in input_file:
-    if line[0] == ">":
-        sequences.append(line)
-        sequences.append("")
-        continue
-    for character in line:
-        if character == "A" or character == "C" or character == "G" or character == "T":
-            sequences[len(sequences) - 1] += character
-input_file.close()
+def read_file():
+    input_file_path = input("Enter the path to the FASTA file: ")
+    input_file = open(input_file_path, "r")
+    sequences = []
+    for line in input_file:
+        if line[0] == ">":
+            sequences.append(line[1:])
+            sequences.append("")
+            continue
+        for character in line:
+            if character == "A" or character == "C" or character == "G" or character == "T":
+                sequences[len(sequences) - 1] += character
+    input_file.close()
+    sequence1 = Sequence(sequences[1], sequences[0])
+    sequence2 = Sequence(sequences[3], sequences[2])
+    return input_file_path, sequence1, sequence2
 
-sequence1 = Sequence(sequences[1])
-sequence2 = Sequence(sequences[3])
+
+def export_file(input_file_path, sequence1, sequence2, alignment):
+    output_file_path = str(pathlib.Path(input_file_path).parent) + "/" + pathlib.Path(
+        input_file_path).stem + "_alignment" + pathlib.Path(input_file_path).suffix
+    output_file = open(output_file_path, "w+")
+    output_file.write(">" + sequence1.description)
+    for i in range(0, int(len(alignment[0]) / 60) + 1):
+        output_file.write(alignment[0][i * 60:i * 60 + 60] + "\n")
+    output_file.write(">" + sequence2.description)
+    for i in range(0, int(len(alignment[1]) / 60) + 1):
+        output_file.write(alignment[1][i * 60:i * 60 + 60] + "\n")
+    output_file.close()
+    print("Exported alignment to: " + pathlib.Path(output_file_path).stem + pathlib.Path(output_file_path).suffix)
+
+
+input_file = read_file()
+input_file_path = input_file[0]
+sequence1 = input_file[1]
+sequence2 = input_file[2]
 alignment = sequence1.global_alignment(sequence2)
-
-output_file_path = str(pathlib.Path(input_file_path).parent) + "/" + pathlib.Path(
-    input_file_path).stem + "_alignment" + pathlib.Path(input_file_path).suffix
-output_file = open(output_file_path, "w+")
-output_file.write(sequences[0])
-for i in range(0, int(len(alignment[0]) / 60) + 1):
-    output_file.write(alignment[0][i * 60:i * 60 + 60] + "\n")
-output_file.write(sequences[2])
-for i in range(0, int(len(alignment[1]) / 60) + 1):
-    output_file.write(alignment[1][i * 60:i * 60 + 60] + "\n")
-output_file.close()
-print("Exported alignment to: " + pathlib.Path(output_file_path).stem + pathlib.Path(output_file_path).suffix)
+export_file(input_file_path, sequence1, sequence2, alignment)
